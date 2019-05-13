@@ -23,7 +23,8 @@ import javafx.scene.input.MouseEvent;
  */
 public class TelaClienteController implements Initializable
 {
-
+    private static Cliente cliente;
+    private Thread th;
     @FXML
     private TextField txmsg;
     @FXML
@@ -37,7 +38,18 @@ public class TelaClienteController implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-        CtrClienteP2P.instancia().connect();
+        try
+        {
+            cliente = TelaConfigConexaoController.getCliente();
+            cliente.setLvClientes(lvClientes);
+            P2P_Chat.getSTAGE().setTitle("Usuário: "+cliente.getNome());
+            th = new Thread(cliente);
+            th.start();
+        }
+        catch(Exception ex)
+        {
+            
+        }
     }
 
     @FXML

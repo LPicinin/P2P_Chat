@@ -83,7 +83,23 @@ public class Servidor implements Runnable
     {
         this.clientes = clientes;
     }
-
+    public boolean resposta(Socket cliente, String resposta)
+    {
+        boolean flag = false;
+        ObjectOutputStream saida = null;
+        try
+        {
+            saida = new ObjectOutputStream(cliente.getOutputStream());
+            saida.flush();
+            saida.writeObject(resposta);
+            saida.close();
+            flag = true;
+        } catch (Exception ex)
+        {
+            System.out.println(ex.getCause());
+        }
+        return flag;
+    }
     public void accept(Socket cliente)
     {
         ObjectOutputStream saida = null;
@@ -91,24 +107,25 @@ public class Servidor implements Runnable
         {
             saida = new ObjectOutputStream(cliente.getOutputStream());
             saida.flush();
-            StringBuilder acceptRes = new StringBuilder();
+            StringBuilder acceptRes = new StringBuilder("@accept");
             Cliente c;
-            for (int i = 0; i < lvClientes.getItems().size(); i++)
+            for (int i = 0; i < lvClientes.getItems().size()-1; i++)
             {
                 c = lvClientes.getItems().get(i);
-                acceptRes.append("@accept#ipclient=").
+                acceptRes.append("#").
                         append(c.getIp()).
-                        append("#nome=").
+                        append("#").
                         append(c.getNome()).
-                        append("#porta=").
+                        append("#").
                         append(c.getPorta());
-            }   acceptRes.append("#count=").append(lvClientes.getItems().size());
+            }
+            acceptRes.append("#").append(lvClientes.getItems().get(lvClientes.getItems().size() - 1).getPorta());
             saida.writeObject(acceptRes.toString());
             saida.close();
         } catch (Exception ex)
         {
             Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
-        } 
+        }
     }
 
     public void newUser()
@@ -120,7 +137,7 @@ public class Servidor implements Runnable
             Cliente ci = lvClientes.getItems().get(i);
             try
             {
-                String con = "#@newUser#" + uca.getIp() + "#" + uca.getNome() + "#" + uca.getPorta();
+                String con = "@newUser#" + uca.getIp() + "#" + uca.getNome() + "#" + uca.getPorta();
                 Socket cliente = new Socket(ci.getIp(), ci.getPorta());
                 ObjectOutputStream saida = new ObjectOutputStream(cliente.getOutputStream());
                 saida.flush();
@@ -129,7 +146,7 @@ public class Servidor implements Runnable
                 cliente.close();
             } catch (Exception ex)
             {
-
+                System.out.println(ex.getCause());
             }
         }
     }
@@ -153,11 +170,6 @@ public class Servidor implements Runnable
                         System.out.println("Cliente conectado: " + cliente.getInetAddress().getHostAddress());
                         ObjectInputStream entrada = new ObjectInputStream(cliente.getInputStream());
                         pacote = entrada.readObject();
-                        /*if(pacote instanceof Cliente)
-                        {
-                            System.out.println(((Cliente)(pacote)).toString());
-                        }
-                        else */
 
                         if (pacote instanceof String)
                         {
@@ -166,34 +178,19 @@ public class Servidor implements Runnable
                             String[] r = res.split("#");
                             switch (r[0])
                             {
+                                case "@testConnect":
+                                    resposta(cliente, "@Ok");
+                                    break;
                                 case "@connect":
-                                    lvClientes.getItems().add(new Cliente(r[1], r[2], lvClientes.getItems().size() + 8081));
+                                    lvClientes.getItems().add(new Cliente(r[1], r[2], getNextPort()));
                                     accept(cliente);
-                                    //accept
-                                    /*ObjectOutputStream saida = new ObjectOutputStream(cliente.getOutputStream());
-                                    saida.flush();
-                                    StringBuilder acceptRes = new StringBuilder();
-                                    Cliente c;
-                                    for (int i = 0; i < lvClientes.getItems().size(); i++)
-                                    {
-                                        c = lvClientes.getItems().get(i);
-                                        acceptRes.append("@accept#ipclient=").
-                                                append(c.getIp()).
-                                                append("#nome=").
-                                                append(c.getNome()).
-                                                append("#porta=").
-                                                append(c.getPorta());
-                                    }
-                                    acceptRes.append("#count=").append(lvClientes.getItems().size());
-                                    saida.writeObject(acceptRes.toString());
-                                    saida.close();
-                                     */
+                                    newUser();
                                     break;
                                 case "@disconnect":
-
+                                    Cliente c = new Cliente(r[1], r[2], r[3]);
+                                    lvClientes.getItems().remove(c);
                                     break;
                             }
-
                         }
 
                         cliente.close();
@@ -222,6 +219,20 @@ public class Servidor implements Runnable
     public static Integer getPort()
     {
         return port;
+    }
+
+    private Integer getNextPort()
+    {
+        Integer p = 0;
+        if (lvClientes.getItems().size() == 0)
+        {
+            p = Servidor.port + 1;
+        }
+        else
+        {
+            p = lvClientes.getItems().get(lvClientes.getItems().size() - 1).getPorta() + 1;
+        }
+        return p;
     }
 
 }
