@@ -41,7 +41,8 @@ public class Servidor implements Runnable
         boolean f = true;
         try
         {
-            server = new ServerSocket(port);
+            if(server == null)
+                server = new ServerSocket(port);
         } catch (Exception ex)
         {
             System.out.println(ex.getCause());
