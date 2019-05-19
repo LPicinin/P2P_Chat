@@ -12,6 +12,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
@@ -31,6 +32,8 @@ public class TelaClienteController implements Initializable
     private ListView<Mensagem> lvmensagens;
     @FXML
     private ListView<Cliente> lvClientes;
+    @FXML
+    private CheckBox chEnviarParaTodos;
 
     /**
      * Initializes the controller class.
@@ -42,6 +45,8 @@ public class TelaClienteController implements Initializable
         {
             cliente = TelaConfigConexaoController.getCliente();
             cliente.setLvClientes(lvClientes);
+            cliente.setLvmensagens(lvmensagens);
+            cliente.setTxmsg(txmsg);
             P2P_Chat.getSTAGE().setTitle("Usuário: "+cliente.getNome());
             th = new Thread(cliente);
             th.start();
@@ -55,7 +60,20 @@ public class TelaClienteController implements Initializable
     @FXML
     private void evtEnviar(MouseEvent event) 
     {
-        
+        cliente.send(chEnviarParaTodos.selectedProperty().get());
+    }
+
+    @FXML
+    private void ClkEnviarParaTodos(MouseEvent event)
+    {
+        if(chEnviarParaTodos.selectedProperty().get())
+        {
+            System.out.println("selecionado");
+            lvClientes.getSelectionModel().clearSelection();
+            lvClientes.setDisable(true);
+        }
+        else
+            lvClientes.setDisable(false);
     }
     
 }

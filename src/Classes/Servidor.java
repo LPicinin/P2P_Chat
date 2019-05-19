@@ -142,7 +142,7 @@ public class Servidor implements Runnable
                 Socket cliente = new Socket(ci.getIp(), ci.getPorta());
                 ObjectOutputStream saida = new ObjectOutputStream(cliente.getOutputStream());
                 saida.flush();
-                saida.writeObject(con);//new Cliente(InetAddress.getLocalHost().toString(), txNome.getText())
+                saida.writeObject(con);
                 saida.close();
                 cliente.close();
             } catch (Exception ex)
@@ -195,7 +195,6 @@ public class Servidor implements Runnable
                         }
 
                         cliente.close();
-                        newUser();
                     }
                 } catch (Exception ex)
                 {

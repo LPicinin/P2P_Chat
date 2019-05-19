@@ -5,13 +5,14 @@
  */
 package Classes;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
  *
  * @author Aluno
  */
-public class Mensagem
+public class Mensagem implements Serializable
 {
     private Cliente cli_origem;
     private Cliente cli_destino;
@@ -55,9 +56,23 @@ public class Mensagem
         this.mensagem = mensagem;
     }
 
+    public LocalDateTime getDt()
+    {
+        return dt;
+    }
+
+    public void setDt(LocalDateTime dt)
+    {
+        this.dt = dt;
+    }
+
     @Override
     public String toString()
     {
-        return "\n"+dt.toString()+"\n"+cli_origem + " disse:" + cli_destino;
+        return cli_origem.getNome() + " disse:" + mensagem+"\n"+dt.toString();
     }
+     public String toStringSocket()
+     {
+         return "@send#"+cli_origem.getIp()+"#"+mensagem+"#"+dt.toString();
+     }
 }
