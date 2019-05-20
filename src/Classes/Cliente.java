@@ -28,7 +28,7 @@ public class Cliente implements Runnable, Serializable
     private static ServerSocket server;
 
     private TextField txmsg;
-    private ListView<Mensagem> lvmensagens;
+    private ListView<Object> lvmensagens;
     private ListView<Cliente> lvClientes;
     private ObservableList<Cliente> listaClientes;
 
@@ -125,7 +125,7 @@ public class Cliente implements Runnable, Serializable
         this.txmsg = txmsg;
     }
 
-    public void setLvmensagens(ListView<Mensagem> lvmensagens)
+    public void setLvmensagens(ListView<Object> lvmensagens)
     {
         this.lvmensagens = lvmensagens;
     }
@@ -247,6 +247,8 @@ public class Cliente implements Runnable, Serializable
                 }
             }
         }
+        lvmensagens.getItems().add("Você disse: "+txmsg.getText());
+        txmsg.clear();
     }
 
     public void receve(Socket emissor, String[] resposta)

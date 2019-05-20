@@ -30,7 +30,7 @@ public class TelaClienteController implements Initializable
     @FXML
     private TextField txmsg;
     @FXML
-    private ListView<Mensagem> lvmensagens;
+    private ListView<Object> lvmensagens;
     @FXML
     private ListView<Cliente> lvClientes;
     @FXML
