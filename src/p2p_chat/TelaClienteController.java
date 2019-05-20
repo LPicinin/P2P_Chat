@@ -13,6 +13,7 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
@@ -34,6 +35,8 @@ public class TelaClienteController implements Initializable
     private ListView<Cliente> lvClientes;
     @FXML
     private CheckBox chEnviarParaTodos;
+    @FXML
+    private Label lblClose;
 
     /**
      * Initializes the controller class.
@@ -74,6 +77,14 @@ public class TelaClienteController implements Initializable
         }
         else
             lvClientes.setDisable(false);
+    }
+
+    @FXML
+    private void evtClose(MouseEvent event) 
+    {
+        cliente.disconnect();
+        th.stop();
+        P2P_Chat.getSTAGE().close();
     }
     
 }

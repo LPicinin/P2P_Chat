@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 /**
  *
@@ -25,7 +26,7 @@ public class P2P_Chat extends Application
         Parent root = FXMLLoader.load(getClass().getResource("TelaPrincipal.fxml"));
 
         Scene scene = new Scene(root);
-
+        STAGE.initStyle(StageStyle.DECORATED);
         STAGE.setScene(scene);
         STAGE.show();
     }

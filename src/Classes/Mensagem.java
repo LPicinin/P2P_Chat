@@ -69,7 +69,7 @@ public class Mensagem implements Serializable
     @Override
     public String toString()
     {
-        return cli_origem.getNome() + " disse:" + mensagem+"\n"+dt.toString();
+        return cli_origem.getNome() + " disse:" + mensagem+"\n"+dt.getHour()+":"+dt.getMinute()+":"+dt.getSecond();
     }
      public String toStringSocket()
      {

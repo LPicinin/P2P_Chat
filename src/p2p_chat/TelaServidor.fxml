@@ -3,46 +3,53 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="502.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="p2p_chat.TelaServidorController">
-   <right>
-      <VBox alignment="TOP_CENTER" prefHeight="313.0" prefWidth="196.0" BorderPane.alignment="CENTER">
+   <bottom>
+      <HBox alignment="CENTER" prefHeight="58.0" prefWidth="502.0" spacing="25.0" BorderPane.alignment="CENTER">
          <children>
-            <Label text="Clientes" />
-            <ListView fx:id="lvClientes" prefHeight="332.0" prefWidth="121.0" />
-            <HBox alignment="CENTER" prefHeight="120.0" prefWidth="121.0">
+            <Button mnemonicParsing="false" onMouseClicked="#evtDisconectar" text="Disconectar" />
+         </children>
+      </HBox>
+   </bottom>
+   <top>
+      <VBox BorderPane.alignment="CENTER">
+         <children>
+            <MenuBar nodeOrientation="RIGHT_TO_LEFT">
+              <menus>
+                <Menu mnemonicParsing="false">
+                     <graphic>
+                        <Label fx:id="lblClose" onMouseClicked="#evtClose" text="X" />
+                     </graphic>
+                </Menu>
+              </menus>
+            </MenuBar>
+            <HBox alignment="CENTER" prefHeight="29.0" prefWidth="502.0">
                <children>
-                  <Button mnemonicParsing="false" onMouseClicked="#evtDisconectar" text="Disconectar" />
+                  <Label fx:id="lblIpServidor" text="Label">
+                     <HBox.margin>
+                        <Insets left="25.0" />
+                     </HBox.margin>
+                  </Label>
                </children>
             </HBox>
          </children>
       </VBox>
-   </right>
-   <bottom>
-      <HBox alignment="CENTER" prefHeight="58.0" prefWidth="502.0" spacing="25.0" BorderPane.alignment="CENTER">
-         <children>
-            <TextField fx:id="txMensagemEnvi" prefHeight="25.0" prefWidth="299.0" promptText="Mensagem:" />
-            <Button mnemonicParsing="false" onMouseClicked="#evtEnviarMensagemTodos" text="Enviar" />
-         </children>
-      </HBox>
-   </bottom>
-   <center>
-      <ListView fx:id="lvMensagens" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
-   </center>
-   <top>
-      <HBox alignment="CENTER_LEFT" prefHeight="29.0" prefWidth="502.0" BorderPane.alignment="CENTER">
-         <children>
-            <Label fx:id="lblIpServidor" text="Label">
-               <HBox.margin>
-                  <Insets left="25.0" />
-               </HBox.margin>
-            </Label>
-         </children>
-      </HBox>
    </top>
+   <center>
+      <TableView fx:id="tabela" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+        <columns>
+          <TableColumn fx:id="colIP" prefWidth="75.0" text="IP" />
+          <TableColumn fx:id="colNome" prefWidth="75.0" text="Nome" />
+            <TableColumn fx:id="colPorta" prefWidth="75.0" text="Porta" />
+        </columns>
+      </TableView>
+   </center>
 </BorderPane>

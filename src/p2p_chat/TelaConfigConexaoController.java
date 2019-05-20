@@ -57,7 +57,7 @@ public class TelaConfigConexaoController implements Initializable
     {
         try
         {
-            cliente = new Cliente(util.getIp_Processado(InetAddress.getLocalHost().toString()), txNome.getText(), txIPServer.getText());
+            cliente = new Cliente(util.getIp_Processado(), txNome.getText(), txIPServer.getText());
             flagcon = (cliente.connect());
             Alert a;
             if(flagcon)
@@ -69,7 +69,7 @@ public class TelaConfigConexaoController implements Initializable
             txIPServer.setDisable(flagcon);
             txNome.setDisable(flagcon);
             btTestConnect.setDisable(flagcon);
-        } catch (UnknownHostException ex)
+        } catch (Exception ex)
         {
             flagcon = false;
         }

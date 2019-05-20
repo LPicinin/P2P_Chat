@@ -13,6 +13,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 
 public class Servidor implements Runnable
@@ -21,17 +22,18 @@ public class Servidor implements Runnable
     private static ServerSocket server;
     private static final Integer port = 8081;
 
-    private TextField txMensagemEnvi;
+    /*private TextField txMensagemEnvi;
     private ListView<Mensagem> lvMensagens;
     private ListView<Cliente> lvClientes;
+    
+*/
     private Label lblIpServidor;
     private List<Cliente> clientes;
+    private TableView<Cliente> tabela;
 
-    public Servidor(TextField txMensagemEnvi, ListView<Mensagem> lvMensagens, ListView<Cliente> lvClientes, Label lblIpServidor)
+    public Servidor(TableView<Cliente> tabela ,Label lblIpServidor)
     {
-        this.txMensagemEnvi = txMensagemEnvi;
-        this.lvMensagens = lvMensagens;
-        this.lvClientes = lvClientes;
+        this.tabela = tabela;
         this.lblIpServidor = lblIpServidor;
         clientes = new ArrayList<>();
     }
@@ -110,9 +112,9 @@ public class Servidor implements Runnable
             saida.flush();
             StringBuilder acceptRes = new StringBuilder("@accept");
             Cliente c;
-            for (int i = 0; i < lvClientes.getItems().size()-1; i++)
+            for (int i = 0; i < tabela.getItems().size()-1; i++)
             {
-                c = lvClientes.getItems().get(i);
+                c = tabela.getItems().get(i);
                 acceptRes.append("#").
                         append(c.getIp()).
                         append("#").
@@ -120,7 +122,7 @@ public class Servidor implements Runnable
                         append("#").
                         append(c.getPorta());
             }
-            acceptRes.append("#").append(lvClientes.getItems().get(lvClientes.getItems().size() - 1).getPorta());
+            acceptRes.append("#").append(tabela.getItems().get(tabela.getItems().size() - 1).getPorta());
             saida.writeObject(acceptRes.toString());
             saida.close();
         } catch (Exception ex)
@@ -131,11 +133,11 @@ public class Servidor implements Runnable
 
     public void newUser()
     {
-        int size = lvClientes.getItems().size();
-        Cliente uca = lvClientes.getItems().get(size - 1);
+        int size = tabela.getItems().size();
+        Cliente uca = tabela.getItems().get(size - 1);
         for (int i = 0; i < size - 1; i++)
         {
-            Cliente ci = lvClientes.getItems().get(i);
+            Cliente ci = tabela.getItems().get(i);
             try
             {
                 String con = "@newUser#" + uca.getIp() + "#" + uca.getNome() + "#" + uca.getPorta();
@@ -183,13 +185,13 @@ public class Servidor implements Runnable
                                     resposta(cliente, "@Ok");
                                     break;
                                 case "@connect":
-                                    lvClientes.getItems().add(new Cliente(r[1], r[2], getNextPort()));
+                                    tabela.getItems().add(new Cliente(r[1], r[2], getNextPort()));
                                     accept(cliente);
                                     newUser();
                                     break;
                                 case "@disconnect":
                                     Cliente c = new Cliente(r[1], r[2], r[3]);
-                                    lvClientes.getItems().remove(c);
+                                    tabela.getItems().remove(c);
                                     break;
                             }
                         }
@@ -224,13 +226,13 @@ public class Servidor implements Runnable
     private Integer getNextPort()
     {
         Integer p = 0;
-        if (lvClientes.getItems().size() == 0)
+        if (tabela.getItems().size() == 0)
         {
             p = Servidor.port + 1;
         }
         else
         {
-            p = lvClientes.getItems().get(lvClientes.getItems().size() - 1).getPorta() + 1;
+            p = tabela.getItems().get(tabela.getItems().size() - 1).getPorta() + 1;
         }
         return p;
     }

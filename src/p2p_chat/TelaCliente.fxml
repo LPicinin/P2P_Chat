@@ -34,12 +34,11 @@
       </HBox>
    </bottom>
    <top>
-      <MenuBar BorderPane.alignment="CENTER">
+      <MenuBar nodeOrientation="RIGHT_TO_LEFT" BorderPane.alignment="CENTER">
          <menus>
-            <Menu mnemonicParsing="false" text="Home" />
             <Menu mnemonicParsing="false">
                <graphic>
-                  <Label text="Logout" />
+                  <Label fx:id="lblClose" onMouseClicked="#evtClose" text="X" />
                </graphic>
             </Menu>
          </menus>

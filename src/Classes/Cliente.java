@@ -187,9 +187,17 @@ public class Cliente implements Runnable, Serializable
             Socket cliente = new Socket(IPservidor, Servidor.getPort());
             ObjectOutputStream saida = new ObjectOutputStream(cliente.getOutputStream());
             saida.flush();
-            saida.writeObject(con);//new Cliente(InetAddress.getLocalHost().toString(), txNome.getText())
+            saida.writeObject(con);
             saida.close();
-            System.out.println("Conexão encerrada");
+            ObservableList<Cliente> oc = lvClientes.getItems();
+            for (Cliente c : oc)
+            {
+                cliente = new Socket(c.getIp(), c.getPorta());
+                saida = new ObjectOutputStream(cliente.getOutputStream());
+                saida.flush();
+                saida.writeObject(con);
+                saida.close();
+            }
         } catch (Exception ex)
         {
             System.out.println(ex.getCause());
@@ -220,8 +228,7 @@ public class Cliente implements Runnable, Serializable
                     System.out.println(ex.getCause());
                 }
             }
-        }
-        else
+        } else
         {
             ci = lvClientes.getSelectionModel().getSelectedItem();
             if (ci != null)
@@ -242,10 +249,10 @@ public class Cliente implements Runnable, Serializable
         }
     }
 
-    public void receve(Socket emissor, String []resposta)
+    public void receve(Socket emissor, String[] resposta)
     {
-        LocalDateTime parse = LocalDateTime.parse(resposta[resposta.length-1]);
-        
+        LocalDateTime parse = LocalDateTime.parse(resposta[resposta.length - 1]);
+
         ObservableList<Cliente> oc = lvClientes.getItems();
         Cliente cemissor = null;
         boolean achou = false;
@@ -336,9 +343,12 @@ public class Cliente implements Runnable, Serializable
                                 case "@send":
                                     receve(cliente, r);
                                     break;
+                                case "@disconnect":
+                                    Cliente c = new Cliente(r[1], r[2], r[3]);
+                                    lvClientes.getItems().remove(c);
+                                    break;
                             }
-                        }
-                        else
+                        } else
                         {
                             System.out.println("Cliente Recebeu um Pacote que não foi entendido!!! = " + pacote.toString());
                         }
@@ -352,8 +362,7 @@ public class Cliente implements Runnable, Serializable
                 {
                     System.out.println(ex.getMessage());
                 }
-            }
-            else
+            } else
             {
                 new Alert(Alert.AlertType.ERROR, "erro ao levantar o servidor", ButtonType.OK).show();
             }
